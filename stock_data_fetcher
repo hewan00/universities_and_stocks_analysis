@@ -1,0 +1,28 @@
+import requests
+import json
+
+# Ask the user for a stock symbol
+stock = input("Enter a stock symbol (e.g., AAPL, MSFT): ")
+print(f"The stock we will research is: {stock}")
+
+# Insert your API key here
+apikey = "yourkey"
+
+# Step 1: Set up the API request
+url = "https://yfapi.net/v6/finance/quote"
+querystring = {"symbols": stock}
+
+headers = {
+    'x-api-key': apikey
+}
+
+# Step 2: Make the API request
+response = requests.get(url, headers=headers, params=querystring)
+
+# Step 3: Parse and display stock information
+if response.status_code == 200:
+    stock_json = response.json()
+    stock_info = stock_json['quoteResponse']['result'][0]
+    print(f"{stock_info['longName']} Price: ${stock_info['regularMarketPrice']}")
+else:
+    print(f"Failed to retrieve data: {response.status_code}")
